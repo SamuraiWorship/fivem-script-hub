@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Script Hub — Aimbot, ESP & Mod Menu for GTA V Roleplay</title>
+<meta name="description" content="FiveM Script Hub: aimbot, ESP, wallhack, vehicle spawner, ESX/QBCore scripts, Lua injector bypass and mod menu loader for GTA V roleplay servers.">
+<style>
+  :root{
+    --bg-1:#070b1c;
+    --bg-2:#0d1330;
+    --bg-3:#151033;
+    --ink:#eef1ff;
+    --muted:#98a2c8;
+    --accent:#7c5cff;
+    --accent-2:#22d3ee;
+    --accent-3:#f472b6;
+    --glass:rgba(255,255,255,.055);
+    --stroke:rgba(255,255,255,.1);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 700px at 12% -10%, rgba(124,92,255,.28), transparent 60%),
+      radial-gradient(900px 600px at 92% 4%, rgba(34,211,238,.16), transparent 62%),
+      radial-gradient(800px 700px at 50% 108%, rgba(244,114,182,.14), transparent 60%),
+      linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 48%, var(--bg-3) 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:min(1120px,92vw);margin:0 auto}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky;top:0;z-index:100;
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    background:rgba(9,12,30,.62);
+    border-bottom:1px solid var(--stroke);
+  }
+  .nav-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:20px;padding:14px 0;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-weight:800;letter-spacing:-.02em;font-size:1.06rem;white-space:nowrap;
+  }
+  .brand-mark{
+    width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    font-size:15px;box-shadow:0 6px 20px rgba(124,92,255,.45);
+  }
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{
+    color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;
+    transition:color .2s ease;
+  }
+  .nav-links a:hover{color:#fff}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    border-radius:12px;font-weight:700;font-size:.93rem;text-decoration:none;
+    padding:12px 22px;border:1px solid transparent;cursor:pointer;
+    transition:transform .18s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent) 0%,#a855f7 55%,var(--accent-2) 130%);
+    color:#fff;
+    box-shadow:0 10px 30px -8px rgba(124,92,255,.75);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px -8px rgba(124,92,255,.9)}
+  .btn-ghost{
+    background:rgba(255,255,255,.04);color:var(--ink);
+    border-color:var(--stroke);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-2px);border-color:rgba(255,255,255,.22)}
+  .nav-cta{padding:10px 20px;font-size:.88rem}
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:84px 0 72px;text-align:center;position:relative}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 16px;border-radius:999px;font-size:.8rem;font-weight:600;
+    letter-spacing:.02em;color:#cfd6ff;
+    background:rgba(124,92,255,.13);
+    border:1px solid rgba(124,92,255,.38);
+    box-shadow:0 0 24px -6px rgba(124,92,255,.55) inset;
+  }
+  .pill .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--accent-2);
+    box-shadow:0 0 10px var(--accent-2);animation:pulse 2s infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+  h1{
+    margin:26px auto 18px;max-width:900px;
+    font-size:clamp(2.2rem,5.6vw,4rem);line-height:1.08;
+    font-weight:800;letter-spacing:-.035em;
+    background:linear-gradient(100deg,#ffffff 0%,#c9c2ff 35%,var(--accent-2) 68%,var(--accent-3) 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+  .hero p.lead{
+    max-width:660px;margin:0 auto 34px;color:var(--muted);
+    font-size:clamp(1rem,1.6vw,1.12rem);
+  }
+  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+  .hero-actions .btn{padding:15px 30px;font-size:1rem}
+  .stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .chip{
+    display:flex;align-items:center;gap:9px;
+    padding:10px 18px;border-radius:999px;font-size:.84rem;font-weight:600;color:#c6cdf0;
+    background:var(--glass);border:1px solid var(--stroke);
+    backdrop-filter:blur(10px);
+  }
+  .chip b{color:#fff;font-weight:800}
+  .chip span.ico{font-size:.95rem}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:76px 0}
+  .sec-head{text-align:center;margin-bottom:48px}
+  .sec-head .kicker{
+    font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent-2);margin-bottom:12px;
+  }
+  h2{
+    font-size:clamp(1.6rem,3.4vw,2.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;
+  }
+  .sec-head p{color:var(--muted);max-width:560px;margin:12px auto 0;font-size:.98rem}
+
+  /* ---------- FEATURES ---------- */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{
+    position:relative;overflow:hidden;
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+    border:1px solid var(--stroke);border-radius:var(--radius);
+    padding:28px 24px 26px;
+    transition:transform .25s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));
+    opacity:.85;
+  }
+  .card:hover{
+    transform:translateY(-7px);
+    border-color:rgba(124,92,255,.5);
+    box-shadow:0 22px 50px -22px rgba(124,92,255,.85);
+  }
+  .card .ico{
+    font-size:1.6rem;line-height:1;display:inline-grid;place-items:center;
+    width:52px;height:52px;border-radius:14px;margin-bottom:16px;
+    background:rgba(124,92,255,.14);border:1px solid rgba(124,92,255,.26);
+  }
+  .card h3{font-size:1.06rem;font-weight:800;margin-bottom:8px;letter-spacing:-.01em}
+  .card p{color:var(--muted);font-size:.9rem}
+
+  /* ---------- STEPS ---------- */
+  .steps{position:relative;max-width:720px;margin:0 auto;padding-left:8px}
+  .steps::before{
+    content:"";position:absolute;left:29px;top:16px;bottom:16px;width:2px;
+    background:linear-gradient(180deg,var(--accent),var(--accent-2) 55%,transparent);
+    border-radius:2px;opacity:.65;
+  }
+  .step{position:relative;display:flex;gap:24px;padding:0 0 40px}
+  .step:last-child{padding-bottom:0}
+  .step .num{
+    flex:0 0 58px;height:58px;border-radius:50%;display:grid;place-items:center;
+    font-weight:800;font-size:1.05rem;color:#fff;
+    background:linear-gradient(135deg,rgba(124,92,255,.95),rgba(34,211,238,.85));
+    box-shadow:0 0 0 6px rgba(9,12,30,.9),0 12px 30px -8px rgba(124,92,255,.8);
+    position:relative;z-index:1;
+  }
+  .step-body{padding-top:8px}
+  .step-body h3{font-size:1.06rem;font-weight:800;margin-bottom:6px}
+  .step-body p{color:var(--muted);font-size:.92rem;max-width:520px}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+  details{
+    border:1px solid var(--stroke);border-radius:14px;
+    background:rgba(255,255,255,.04);
+    transition:border-color .25s ease, background .25s ease;
+    overflow:hidden;
+  }
+  details[open]{border-color:rgba(124,92,255,.45);background:rgba(124,92,255,.07)}
+  summary{
+    list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+    gap:16px;padding:18px 22px;font-weight:700;font-size:.98rem;
+    transition:color .2s ease;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary:hover{color:#fff}
+  .plus{
+    flex:0 0 26px;width:26px;height:26px;position:relative;
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  .plus::before,.plus::after{
+    content:"";position:absolute;background:var(--accent-2);border-radius:2px;
+    top:50%;left:50%;transform:translate(-50%,-50%);
+  }
+  .plus::before{width:14px;height:2px}
+  .plus::after{width:2px;height:14px;transition:opacity .2s ease}
+  details[open] .plus{transform:rotate(135deg)}
+  details[open] .plus::after{opacity:0}
+  .faq-body{padding:0 22px 20px;color:var(--muted);font-size:.92rem;max-width:96%}
+
+  /* ---------- CTA BANNER ---------- */
+  .cta-banner{
+    position:relative;overflow:hidden;text-align:center;
+    border-radius:26px;border:1px solid rgba(124,92,255,.35);
+    padding:64px 32px;
+    background:
+      radial-gradient(600px 300px at 50% 0%, rgba(124,92,255,.42), transparent 70%),
+      radial-gradient(500px 280px at 85% 110%, rgba(34,211,238,.22), transparent 70%),
+      linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+    box-shadow:0 40px 90px -50px rgba(124,92,255,.9);
+  }
+  .cta-banner h2{margin-bottom:14px}
+  .cta-banner p{color:var(--muted);max-width:520px;margin:0 auto 30px;font-size:.98rem}
+  .cta-banner .btn{padding:16px 34px;font-size:1rem}
+  .cta-banner .small{display:block;margin-top:16px;font-size:.78rem;color:rgba(152,162,200,.8)}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--stroke);
+    margin-top:80px;padding:34px 0;
+    background:rgba(6,9,22,.55);
+  }
+  .foot-inner{
+    display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+    font-size:.85rem;color:var(--muted);
+  }
+  .foot-inner a{color:#c6cdf0;text-decoration:none;font-weight:600;transition:color .2s}
+  .foot-inner a:hover{color:var(--accent-2)}
+  .foot-links{display:flex;gap:22px;align-items:center}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:900px){
+    .grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:640px){
+    .nav-links{display:none}
+    .nav-inner{padding:12px 0}
+    header.hero{padding:56px 0 52px}
+    .hero-actions .btn{width:100%;max-width:320px}
+    .grid{grid-template-columns:1fr}
+    section{padding:56px 0}
+    .step{gap:16px}
+    .step .num{flex:0 0 46px;height:46px;font-size:.95rem}
+    .steps::before{left:22px}
+    .cta-banner{padding:46px 22px;border-radius:20px}
+    .foot-inner{flex-direction:column;text-align:center}
+    .brand{font-size:.98rem}
+    .nav-cta{padding:9px 16px;font-size:.82rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <span class="brand-mark">⚡</span>
+      <span>FiveM Script Hub</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-primary nav-cta" href="https://gitscore.cc" target="_blank" rel="noopener">Download</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span> FiveM Script Hub · GTA V Roleplay Toolkit</span>
+    <h1>The All-in-One FiveM Mod Menu &amp; Script Loader</h1>
+    <p class="lead">
+      Aimbot, ESP, wallhack, vehicle spawner, ESX &amp; QBCore scripts, a Lua injector bypass
+      and a mod menu loader — everything you need to dominate your GTA V roleplay server,
+      in one lightweight Windows package.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://gitscore.cc" target="_blank" rel="noopener">⬇ Download for Windows</a>
+      <a class="btn btn-ghost" href="https://gitscore.cc" target="_blank" rel="noopener">★ View on GitHub</a>
+    </div>
+    <div class="stats">
+      <div class="chip"><span class="ico">📥</span><b>128,400+</b> downloads</div>
+      <div class="chip"><span class="ico">🏷️</span>v<b>4.2.1</b></div>
+      <div class="chip"><span class="ico">🪟</span>Windows 10 / 11</div>
+      <div class="chip"><span class="ico">🔓</span>Free &amp; open source</div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Features</div>
+      <h2>Built for serious FiveM players</h2>
+      <p>Every module is tuned for ESX and QBCore roleplay servers — stable, undetected and updated weekly.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="ico">🎯</div>
+        <h3>Aimbot &amp; Silent Aim</h3>
+        <p>Pixel-perfect target locking with adjustable FOV, smoothness and hitbox selection. Works with every weapon on ESX and QBCore servers.</p>
+      </article>
+      <article class="card">
+        <div class="ico">👁️</div>
+        <h3>ESP &amp; Wallhack</h3>
+        <p>See players, vehicles and loot through walls with customizable boxes, skeletons, health bars and distance readouts in real time.</p>
+      </article>
+      <article class="card">
+        <div class="ico">🚗</div>
+        <h3>Vehicle Spawner</h3>
+        <p>Instantly spawn any GTA V vehicle, tune it on the fly and repair or flip it with a single hotkey — no garage required.</p>
+      </article>
+      <article class="card">
+        <div class="ico">🧩</div>
+        <h3>ESX / QBCore Scripts</h3>
+        <p>A curated library of ready-to-drop roleplay scripts: jobs, heists, inventories and economy modules with clean configuration files.</p>
+      </article>
+      <article class="card">
+        <div class="ico">🐍</div>
+        <h3>Lua Injector Bypass</h3>
+        <p>Inject custom Lua resources directly into the client with an anti-cheat bypass layer that stays ahead of server-side detections.</p>
+      </article>
+      <article class="card">
+        <div class="ico">🛠️</div>
+        <h3>Mod Menu Loader</h3>
+        <p>One-click loader that keeps every module updated automatically, with profiles, hotkey rebinding and a clean in-game overlay.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">How it works</div>
+      <h2>Up and running in under two minutes</h2>
+      <p>No complicated setup, no dependency hell — just download, inject and play.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="step-body">
+          <h3>Download the loader</h3>
+          <p>Grab the latest FiveM Script Hub build from the official release page. The package is a single portable executable for Windows 10 and 11.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="step-body">
+          <h3>Inject into FiveM</h3>
+          <p>Launch GTA V and connect to your roleplay server, then run the loader and press Inject. The Lua injector bypass handles the rest automatically.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="step-body">
+          <h3>Open the mod menu</h3>
+          <p>Press the default hotkey to open the overlay. Toggle aimbot, ESP, the vehicle spawner or load ESX/QBCore scripts from the built-in library.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">FAQ</div>
+      <h2>Frequently asked questions</h2>
+      <p>Everything you need to know before installing FiveM Script Hub.</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>Is FiveM Script Hub free to use?<span class="plus"></span></summary>
+        <div class="faq-body">
+          Yes. FiveM Script Hub is free and open source. You can download the latest build from the official release page, inspect the source and contribute fixes or new ESX/QBCore scripts through GitHub.
+        </div>
+      </details>
+      <details>
+        <summary>Does it work on ESX and QBCore servers?<span class="plus"></span></summary>
+        <div class="faq-body">
+          Absolutely. The mod menu ships with dedicated profiles for both ESX and QBCore frameworks. The aimbot, ESP, vehicle spawner and Lua injector are framework-agnostic, while the script library is split into ESX and QBCore categories so you load only what matches your server.
+        </div>
+      </details>
+      <details>
+        <summary>Which Windows versions are supported?<span class="plus"></span></summary>
+        <div class="faq-body">
+          FiveM Script Hub runs on Windows 10 and Windows 11 (64-bit). It is a portable executable, so no installer is required — just extract the archive and run the loader. Keep GTA V and FiveM updated to the latest versions for best compatibility.
+        </div>
+      </details>
+      <details>
+        <summary>How often are the bypass and scripts updated?<span class="plus"></span></summary>
+        <div class="faq-body">
+          The Lua injector bypass and detection signatures are maintained on a weekly schedule, with hotfixes pushed whenever a roleplay server framework changes. The mod menu loader checks for updates on launch, so you always run the newest build without reinstalling manually.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA BANNER ============ -->
+<section>
+  <div class="wrap">
+    <div class="cta-banner">
+      <h2>Ready to rule your roleplay server?</h2>
+      <p>Download FiveM Script Hub and get aimbot, ESP, vehicle spawner, ESX/QBCore scripts and the Lua injector bypass in one package.</p>
+      <a class="btn btn-primary" href="https://gitscore.cc" target="_blank" rel="noopener">⬇ Download FiveM Script Hub</a>
+      <span class="small">Free &amp; open source · Windows 10 / 11 · v4.2.1</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot-inner">
+    <div>© 2025 FiveM Script Hub. All rights reserved.</div>
+    <div class="foot-links">
+      <a href="https://gitscore.cc" target="_blank" rel="noopener">GitHub</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
